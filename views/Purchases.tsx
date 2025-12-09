@@ -122,7 +122,7 @@ const POEditor: React.FC<POEditorProps> = ({ po: initialPO, onSave, onCancel, ai
 
                 {/* AI Rationale Display */}
                 {aiRationale && (
-                    <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg animate-fade-in-up">
                         <div className="flex items-start gap-3">
                             <div className="bg-blue-100 dark:bg-blue-800 p-2 rounded-full">
                                 <ScanIcon className="w-4 h-4 text-blue-600 dark:text-blue-300" />

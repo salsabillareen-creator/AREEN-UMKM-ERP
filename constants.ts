@@ -1,6 +1,6 @@
 // constants.ts
 
-import { Invoice, Bill, Product, ChartData, InvoiceStatus, BillStatus, Contact, ContactType, LedgerEntry, AccountType, Deal, DealStatus, CashFlowEntry, Employee, Project, Task, TaskStatus, TaskPriority, PurchaseOrder, PurchaseOrderStatus } from './types';
+import { Invoice, Bill, Product, ChartData, InvoiceStatus, BillStatus, Contact, ContactType, LedgerEntry, AccountType, Deal, DealStatus, CashFlowEntry, Employee, Project, Task, TaskStatus, TaskPriority, PurchaseOrder, PurchaseOrderStatus, SalesOrder, SalesOrderStatus } from './types';
 
 // FIX: Renamed MOCK_INVOVICES to MOCK_INVOICES to fix typo.
 export const MOCK_INVOICES: Invoice[] = [
@@ -79,6 +79,43 @@ export const MOCK_PURCHASE_ORDERS: PurchaseOrder[] = [
     totalAmount: 60000000, 
     status: PurchaseOrderStatus.Draft 
   },
+];
+
+export const MOCK_SALES_ORDERS: SalesOrder[] = [
+    {
+        id: 'SO-1001',
+        customer: 'Stark Industries',
+        date: '2023-11-01',
+        expectedDeliveryDate: '2023-11-10',
+        totalAmount: 150000000,
+        status: SalesOrderStatus.Confirmed,
+        items: [
+            { productId: 'PROD-01', productName: 'Quantum Widget', quantity: 100, unitPrice: 350000 },
+            { productId: 'PROD-05', productName: 'Turbo Encabulator', quantity: 2, unitPrice: 12500000 }
+        ]
+    },
+    {
+        id: 'SO-1002',
+        customer: 'Wayne Enterprises',
+        date: '2023-11-03',
+        expectedDeliveryDate: '2023-11-15',
+        totalAmount: 7500000,
+        status: SalesOrderStatus.Draft,
+        items: [
+            { productId: 'PROD-02', productName: 'Hyper Sprocket', quantity: 10, unitPrice: 750000 }
+        ]
+    },
+    {
+        id: 'SO-1003',
+        customer: 'Cyberdyne Systems',
+        date: '2023-11-05',
+        expectedDeliveryDate: '2023-11-20',
+        totalAmount: 56000000,
+        status: SalesOrderStatus.Shipped,
+        items: [
+            { productId: 'PROD-04', productName: 'Flux Capacitor Casing', quantity: 20, unitPrice: 2800000 }
+        ]
+    }
 ];
 
 export const MOCK_CHART_DATA: ChartData[] = [

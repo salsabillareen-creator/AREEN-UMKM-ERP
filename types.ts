@@ -188,3 +188,29 @@ export interface PurchaseOrder {
     totalAmount: number;
     status: PurchaseOrderStatus;
 }
+
+// Types for Sales Orders
+export enum SalesOrderStatus {
+    Draft = 'Draft',
+    Confirmed = 'Confirmed',
+    Shipped = 'Shipped',
+    Invoiced = 'Invoiced',
+    Cancelled = 'Cancelled'
+}
+
+export interface SalesOrderItem {
+    productId: string;
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+}
+
+export interface SalesOrder {
+    id: string;
+    customer: string;
+    date: string;
+    expectedDeliveryDate: string;
+    items: SalesOrderItem[];
+    totalAmount: number;
+    status: SalesOrderStatus;
+}

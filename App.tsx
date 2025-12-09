@@ -1,3 +1,4 @@
+
 // App.tsx
 
 import React, { useState } from 'react';
@@ -5,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './views/Dashboard';
 import Sales from './views/Sales';
+import SalesOrders from './views/SalesOrders';
 import Purchases from './views/Purchases';
 import Inventory from './views/Inventory';
 import Reports from './views/Reports';
@@ -27,6 +29,8 @@ const AppContent: React.FC = () => {
         return <Dashboard setCurrentView={setCurrentView} />;
       case 'sales':
         return <Sales />;
+      case 'sales-orders':
+        return <SalesOrders />;
       case 'crm':
         return <CRM />;
       case 'purchases':

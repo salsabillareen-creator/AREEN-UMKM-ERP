@@ -1,7 +1,8 @@
+
 // components/Sidebar.tsx
 
 import React from 'react';
-import { SalesIcon, InventoryIcon, AccountingIcon, ProjectsIcon, HRIcon, SettingsIcon, LogoutIcon, AIAnalystIcon, UsersIcon, TrendingUpIcon, PurchasesIcon, LayoutGridIcon, SparklesIcon } from './icons';
+import { SalesIcon, InventoryIcon, AccountingIcon, ProjectsIcon, HRIcon, SettingsIcon, LogoutIcon, AIAnalystIcon, UsersIcon, TrendingUpIcon, PurchasesIcon, LayoutGridIcon, SparklesIcon, ClipboardListIcon } from './icons';
 
 interface NavItem {
   name: string;
@@ -12,6 +13,7 @@ interface NavItem {
 const mainNavItems: NavItem[] = [
   { name: 'Dashboard', view: 'dashboard', icon: LayoutGridIcon },
   { name: 'Sales', view: 'sales', icon: SalesIcon },
+  { name: 'Sales Orders', view: 'sales-orders', icon: ClipboardListIcon },
   { name: 'Purchases', view: 'purchases', icon: PurchasesIcon },
   { name: 'Inventory', view: 'inventory', icon: InventoryIcon },
   { name: 'Accounting', view: 'reports', icon: AccountingIcon },
