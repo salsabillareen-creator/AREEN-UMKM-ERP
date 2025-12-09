@@ -14,8 +14,20 @@ import { useTheme } from '../contexts/ThemeContext';
 import { formatCurrency } from '../utils/formatting';
 
 // Blueprint Component: Scorecard
-const Scorecard: React.FC<{ title: string; value: string; trend: string; trendUp: boolean; icon: React.ReactNode }> = ({ title, value, trend, trendUp, icon }) => (
-    <div className="bg-white dark:bg-stone-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-stone-700 flex flex-col justify-between h-full">
+interface ScorecardProps {
+    title: string;
+    value: string;
+    trend: string;
+    trendUp: boolean;
+    icon: React.ReactNode;
+    onClick?: () => void;
+}
+
+const Scorecard: React.FC<ScorecardProps> = ({ title, value, trend, trendUp, icon, onClick }) => (
+    <div 
+        onClick={onClick}
+        className={`bg-white dark:bg-stone-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-stone-700 flex flex-col justify-between h-full ${onClick ? 'cursor-pointer hover:shadow-md hover:scale-[1.02] transition-transform duration-200' : ''}`}
+    >
         <div className="flex justify-between items-start">
             <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{title}</p>
@@ -98,6 +110,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     trend="+12.5%" 
                     trendUp={true} 
                     icon={<DollarSignIcon className="w-6 h-6"/>} 
+                    onClick={() => setCurrentView('cash-flow')}
                 />
                 <Scorecard 
                     title="Net Income (MoM)" 
@@ -105,6 +118,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     trend="+5.2%" 
                     trendUp={true} 
                     icon={<TrendingUpIcon className="w-6 h-6"/>} 
+                    onClick={() => setCurrentView('reports')}
                 />
                 <Scorecard 
                     title="Total AR Overdue" 
@@ -112,6 +126,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setCurrentView }) => {
                     trend="+2.1%" 
                     trendUp={false} 
                     icon={<WarningIcon className="w-6 h-6"/>} 
+                    onClick={() => setCurrentView('sales')}
                 />
             </div>
 
