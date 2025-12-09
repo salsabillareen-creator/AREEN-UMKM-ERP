@@ -5,12 +5,18 @@ import { GoogleGenAI, Type, FunctionDeclaration } from "@google/genai";
 import { ChartData, CashFlowEntry, CashFlowForecast, ProactiveInsight } from '../types';
 
 // Per guidelines, initialize with API_KEY from environment variables.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+// SAFETY FIX: Use a fallback empty string if API_KEY is missing during build/runtime initialization.
+// This prevents the entire React app from crashing (White Screen) on load.
+// The actual API calls will still fail gracefully with an error message if the key is invalid.
+const apiKey = process.env.API_KEY || ""; 
+const ai = new GoogleGenAI({ apiKey: apiKey });
 
 const model = 'gemini-2.5-flash';
 
 // --- Deliverable 1: Document Ingestion Schema Implementation ---
 const parseInvoiceImage = async (base64Image: string): Promise<any> => {
+    if (!apiKey) throw new Error("API Key is missing. Please check your settings.");
+    
     const prompt = `
         Analyze this invoice image and extract the following information into a strict JSON format.
         Identify the vendor, date, total amount, and line items.
@@ -92,6 +98,8 @@ const postValidatedJournalEntryTool: FunctionDeclaration = {
 };
 
 const createJournalEntryFromInvoice = async (invoiceData: any): Promise<any> => {
+     if (!apiKey) throw new Error("API Key is missing. Please check your settings.");
+
      const prompt = `
         Based on this invoice data, generate a balanced journal entry structure.
         Invoice: ${JSON.stringify(invoiceData)}
@@ -117,6 +125,8 @@ const createJournalEntryFromInvoice = async (invoiceData: any): Promise<any> => 
 };
 
 const generateFinancialSummary = async (data: ChartData[]): Promise<string> => {
+  if (!apiKey) return "API Key is missing. Please configure it in Settings.";
+
   const prompt = `
     Analyze the following financial data which represents monthly income and expense in IDR.
     Provide a concise summary of the financial performance.
@@ -136,6 +146,8 @@ const generateFinancialSummary = async (data: ChartData[]): Promise<string> => {
 };
 
 const getChatbotResponse = async (userInput: string): Promise<string> => {
+  if (!apiKey) return "Error: API Key is missing. Please ask the administrator to configure the Google Gemini API Key.";
+
   // This is a simplified chatbot. For a real app, we'd use ai.chats.create for conversation history.
   // Given the current implementation in Chatbot.tsx, a one-off response is what's expected.
   const prompt = `
@@ -155,6 +167,8 @@ const getChatbotResponse = async (userInput: string): Promise<string> => {
 
 
 const getLeadScoreAndNextAction = async (dealName: string, dealValue: number): Promise<{ score: number; action: string; }> => {
+    if (!apiKey) return { score: 0, action: "API Key Missing" };
+
     const prompt = `
       Analyze the following sales deal and provide a lead score (0-100) and a concise next action suggestion.
       - Deal Name: "${dealName}"
@@ -196,6 +210,8 @@ const getLeadScoreAndNextAction = async (dealName: string, dealValue: number): P
 };
 
 const getCashFlowForecast = async (data: CashFlowEntry[]): Promise<CashFlowForecast> => {
+    if (!apiKey) throw new Error("API Key is missing");
+
     const prompt = `
         Based on the following historical cash flow data (in IDR) for the last 6 months, generate a forecast for the next 30, 60, and 90 days.
         Also, provide a brief "warning" string if you detect a potential negative cash flow or a significant downturn. If there are no warnings, return an empty string for the warning.
@@ -239,6 +255,8 @@ const getCashFlowForecast = async (data: CashFlowEntry[]): Promise<CashFlowForec
 };
 
 const getProactiveInsights = async (erpData: object): Promise<ProactiveInsight[]> => {
+    if (!apiKey) return [{ type: 'Efficiency', title: 'API Key Missing', description: 'Please configure the Google AI API Key in settings to see insights.' }];
+
     const prompt = `
         You are an expert AI business analyst for an ERP system.
         Analyze the provided JSON data which includes invoices, products, deals, and bills.
@@ -286,6 +304,8 @@ const getProactiveInsights = async (erpData: object): Promise<ProactiveInsight[]
 };
 
 const analyzeDataWithQuestion = async (userQuestion: string, contextData: object): Promise<string> => {
+    if (!apiKey) return "API Key is missing. Cannot analyze data.";
+
     const prompt = `
         You are an AI business analyst for an ERP system. 
         Analyze the provided JSON business data to answer the user's question. 
@@ -307,6 +327,8 @@ const analyzeDataWithQuestion = async (userQuestion: string, contextData: object
 };
 
 const generateSyntheticData = async (module: string, columns: string[], rowCount: number, rules: string): Promise<Record<string, any>[]> => {
+    if (!apiKey) throw new Error("API Key is missing.");
+
     const cleanedColumns = columns.map(col => ({
         original: col.trim(),
         key: col.trim().replace(/[^a-zA-Z0-9_]/g, '_').replace(/\s+/g, '_'),
