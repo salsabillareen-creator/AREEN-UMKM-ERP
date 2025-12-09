@@ -1,7 +1,7 @@
 
 // services/geminiService.ts
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, FunctionDeclaration } from "@google/genai";
 import { ChartData, CashFlowEntry, CashFlowForecast, ProactiveInsight } from '../types';
 
 // Per guidelines, initialize with API_KEY from environment variables.
@@ -63,6 +63,57 @@ const parseInvoiceImage = async (base64Image: string): Promise<any> => {
         jsonStr = jsonStr.substring(1, jsonStr.length - 1).trim();
     }
     return JSON.parse(jsonStr);
+};
+
+// --- Deliverable 2: Critical ERP Function Declaration ---
+const postValidatedJournalEntryTool: FunctionDeclaration = {
+    name: "post_validated_journal_entry",
+    description: "Posts a validated journal entry to the ERP backend. Use this when transaction data is verified and ready for the General Ledger.",
+    parameters: {
+        type: Type.OBJECT,
+        properties: {
+            gl_entries: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        account_id: { type: Type.STRING, description: "Unique GL Account ID (e.g., 1100-Kas)" },
+                        debit_amount: { type: Type.NUMBER, description: "Amount to Debit. 0 if Credit." },
+                        credit_amount: { type: Type.NUMBER, description: "Amount to Credit. 0 if Debit." }
+                    },
+                    required: ["account_id", "debit_amount", "credit_amount"]
+                }
+            },
+            transaction_source_id: { type: Type.STRING, description: "Source Document ID (e.g., INV-2025001)" },
+            ai_rationale: { type: Type.STRING, description: "AI explanation for the account classification for audit trail." }
+        },
+        required: ["gl_entries", "transaction_source_id", "ai_rationale"]
+    }
+};
+
+const createJournalEntryFromInvoice = async (invoiceData: any): Promise<any> => {
+     const prompt = `
+        Based on this invoice data, generate a balanced journal entry structure.
+        Invoice: ${JSON.stringify(invoiceData)}
+        
+        Rules:
+        1. Debit the appropriate Expense or Asset accounts based on line items.
+        2. Credit '2000-Accounts Payable' for the total amount.
+        3. Ensure Total Debit equals Total Credit.
+        4. Provide a clear rationale.
+    `;
+
+    const response = await ai.models.generateContent({
+        model: model,
+        contents: prompt,
+        config: {
+            tools: [{ functionDeclarations: [postValidatedJournalEntryTool] }],
+            toolConfig: { functionCallingConfig: { mode: "ANY" } } 
+        }
+    });
+    
+    // Extract arguments from the function call
+    return response.functionCalls?.[0]?.args;
 };
 
 const generateFinancialSummary = async (data: ChartData[]): Promise<string> => {
@@ -315,4 +366,5 @@ export const geminiService = {
   analyzeDataWithQuestion,
   generateSyntheticData,
   parseInvoiceImage,
+  createJournalEntryFromInvoice,
 };

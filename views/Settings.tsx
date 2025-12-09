@@ -81,7 +81,7 @@ const Settings: React.FC = () => {
             <h3 className="text-lg font-semibold text-stone-700 dark:text-stone-200 border-b dark:border-stone-700 pb-2 mb-4">Notifications</h3>
             <div className="flex items-center">
               <input id="email-notifications" type="checkbox" defaultChecked className="h-4 w-4 text-[var(--color-primary)] border-stone-300 rounded focus:ring-[var(--color-primary)]" />
-              <label htmlFor="email-notifications" className="ml-2 block text-sm text-stone-700 dark:text-stone-300">Enable Email Notifications</p>
+              <label htmlFor="email-notifications" className="ml-2 block text-sm text-stone-700 dark:text-stone-300">Enable Email Notifications</label>
             </div>
           </div>
         </div>
